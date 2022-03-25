@@ -1,13 +1,5 @@
-# MernManiacs-backend
+# project-server-mern-maniacs
+- [ ] All the required rest API with validation, authentication, and authorization for the project
+- [ ] Enables cors
+- [ ] Please also submit a readme.md files with project documentation and details on who did what 
 
-1. npm i to install the modules
-
-2. Create a .env file in the same location as server.js with
-
-    PORT = 
-
-    MONGO_DB_CONN=
-
-    JWT_SECRET =
-
-3. run npm start or nodemon server.js to start the backend
