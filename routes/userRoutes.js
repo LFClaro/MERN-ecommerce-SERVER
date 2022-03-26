@@ -8,15 +8,30 @@ const router = express.Router();
 
 const jwt = require('jsonwebtoken');
 
-//route Post /user
+//Route GET api/users
+//model: Get all users
+//Access: public
+router.get('/', async (req, res) => {
+    try {
+        const userDB = await User.find();
+        res.send(userDB);
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).json({ error: 'SERVER ERROR: ' + err.message });
+    }
+});
+
+//route Post api/users
 //desc Add a user
 //access public
 router.post(
     '/',
     [
+        check('firstName', 'First Name is required').not().isEmpty(),
+        check('lastName', 'Last Name is required').not().isEmpty(),
         check('email', 'Please enter valid email').isEmail(),
-        check('password', 'password need to be at least 12 char').isLength({
-            min: 5,
+        check('password', 'Password needs to be at least 10 characters long.').isLength({
+            min: 10,
         }),
     ],
     async (req, res) => {
@@ -37,12 +52,14 @@ router.post(
             const password = await bcrypt.hash(req.body.password, salt);
             //create a new user and saved in the MongoDB
             const newUser = new User({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
                 email: req.body.email,
                 password: password,
             });
             await newUser.save();
 
-            console.log('New User saved to mongDB: ', newUser);
+            // console.log('New User saved to mongoDB: ', newUser);
 
             const payload = {
                 user: {
@@ -62,7 +79,7 @@ router.post(
             );
         } catch (err) {
             console.log(err.message);
-            return res.status(500).json({ error: 'Server erroe' });
+            return res.status(500).json({ error: 'SERVER ERROR: ' + err.message });
         }
     }
 );

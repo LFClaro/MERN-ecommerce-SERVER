@@ -31,7 +31,7 @@ router.post('/',
 
             await bcrypt.compare(password, user.password, (err, result) => {
                 if (!result) {
-                    return res.status(401).json({ errors: 'That password is incorrect, please try again' })
+                    return res.status(400).json({ errors: 'Invalid credentials 2' }); // Not a common practice to say invalid password
                 }
 
                 const payload = {
@@ -60,7 +60,7 @@ router.post('/',
         } catch (err) {
             console.log(err.message);
             const errMsg = err.message;
-            return res.status(500).json({ error: errMsg })
+            return res.status(500).json({ error: 'SERVER ERROR: ' + err.message });
         }
 
     })
