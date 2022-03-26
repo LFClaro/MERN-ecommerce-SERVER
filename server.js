@@ -19,9 +19,9 @@ const app = express();//create application to set up entire server
 app.use(cors());
 app.use(express.json());//****important for post */ allow u pass json information from the body by a formed post
 
-app.use('/user/register', userRouter);
-app.use('/auth', authRouter);
-app.use('/faqs', faqRouter);
+app.use('/api/users', userRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/faqs', faqRouter);
 app.use('/api/contact', contactRoute);
 app.use('/api/communityReply', communityReplyRoute);
 app.use('/api/communityPost', communityPostRoute);
