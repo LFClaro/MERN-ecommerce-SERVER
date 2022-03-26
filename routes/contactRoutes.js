@@ -7,13 +7,13 @@ const { check, validationResult } = require("express-validator"); // used for va
 const nodemailer = require('nodemailer');
 
 let Contact = require("../models/Contact");// get access to our contact model
-const authMiddleware = require("../middlewares/authMiddleware"); // get access to our middleware
+const auth = require("../middlewares/auth"); // get access to our middleware
 const router = express.Router(); // create router obj
 
 //route Get api/contact
 //desc Get all contacts from user id - for admin purposes 
 //access public
-router.get("/",authMiddleware, async (req, res) => {
+router.get("/",auth, async (req, res) => {
   try {
     const allContact = await Contact.find({ user: req.user.id }); // finds all contact in db by the user id
     res.send(allContact);
@@ -54,7 +54,7 @@ router.get("/:id", async (req, res) => {
 //desc Add a contact - for users to submit a contact message 
 //access public
 router.post(
-  "/", authMiddleware, 
+  "/", auth, 
   [check("name", "Your name is required").not().isEmpty()], // checking for validation 
   [check("email", "Your email is required").not().isEmpty()],
   [check("email", "Please enter a valid email").isEmail()],

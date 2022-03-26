@@ -3,13 +3,13 @@ const uuid = require("uuid"); // for creating unique ids
 const { check, validationResult } = require("express-validator"); // used for validation 
 
 let Profile = require("../models/Profile");// get access to our contact model
-const authMiddleware = require("../middlewares/authMiddleware"); // get access to our middleware
+const auth = require("../middlewares/auth"); // get access to our middleware
 const router = express.Router(); // create router obj
 
 //route Get api/Profile
 //desc Get all Profiles from user id - for admin purposes 
 //access public
-router.get("/",authMiddleware, async (req, res) => {
+router.get("/",auth, async (req, res) => {
   try {
     const profile = await Profile.find({ user: req.user.id }); // finds the Profile in db by the user id
     res.send(profile);
@@ -50,7 +50,7 @@ router.get("/all", async (req, res) => {
 //desc Add a Profile - for users to submit a Profile message 
 //access public
 router.post(
-  "/", authMiddleware, 
+  "/", auth, 
   [check("firstname", "Your first name is required").not().isEmpty()], // checking for validation 
   [check("lastname", "Your last name is required").not().isEmpty()], 
   [check("email", "Your email is required").not().isEmpty()],

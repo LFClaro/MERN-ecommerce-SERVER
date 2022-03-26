@@ -3,13 +3,13 @@ const uuid = require("uuid"); // for creating unique ids
 const { check, validationResult } = require("express-validator"); // used for validation 
 
 let Community = require("../models/CommunityReply");// get access to our community model
-const authMiddleware = require("../middlewares/authMiddleware"); // get access to our middleware
+const auth = require("../middlewares/auth"); // get access to our middleware
 const router = express.Router(); // create router obj
 
 //route Get api/Community 
 //desc Get all Community replies from user id - for admin purposes 
 //access public
-router.get("/",authMiddleware, async (req, res) => {
+router.get("/",auth, async (req, res) => {
   try {
     const allCommunity = await Community.find({ user: req.user.id }); // finds all Community in db by the user id
     res.send(allCommunity);
@@ -69,7 +69,7 @@ router.get("/:id", async (req, res) => {
 //desc Add a Community - for users to submit a Community message 
 //access public
 router.post(
-  "/", authMiddleware, 
+  "/", auth, 
   [check("reply", "Your reply is required").not().isEmpty()], // checking for validation   
   [check("reply", "Your reply needs to be at least 10 char").isLength({
     min: 10,
