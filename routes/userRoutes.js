@@ -27,8 +27,8 @@ router.get('/', async (req, res) => {
 router.post(
     '/',
     [
-        check('firstName', 'First Name is required').not().isEmpty(),
-        check('lastName', 'Last Name is required').not().isEmpty(),
+        check('fname', 'First Name is required').not().isEmpty(),
+        check('lname', 'Last Name is required').not().isEmpty(),
         check('email', 'Please enter valid email').isEmail(),
         check('password', 'Password needs to be at least 10 characters long.').isLength({
             min: 10,
@@ -52,8 +52,8 @@ router.post(
             const password = await bcrypt.hash(req.body.password, salt);
             //create a new user and saved in the MongoDB
             const newUser = new User({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
+                fname: req.body.fname,
+                lname: req.body.lname,
                 email: req.body.email,
                 password: password,
             });
