@@ -22,6 +22,7 @@ router.post(
     async (req, res) => {
         const errors = validationResult(req);
 
+        //reutn result if there is any format errors
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
@@ -34,16 +35,19 @@ router.post(
 
             const salt = await bcrypt.genSalt(10);
             const password = await bcrypt.hash(req.body.password, salt);
+            //create a new user and saved in the MongoDB
             const newUser = new User({
                 email: req.body.email,
                 password: password,
             });
             await newUser.save();
 
+            console.log('New User saved to mongDB: ', newUser);
+
             const payload = {
                 user: {
                     id: newUser.id,
-                    name: newUser.name,
+                    email: newUser.email,
                 },
             };
 

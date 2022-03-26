@@ -4,11 +4,9 @@ const Schema = mongoose.Schema;
 const userSchema = Schema({
     fname: {
         type: String,
-        require: true,
     },
     lname: {
         type: String,
-        require: true,
     },
     email: {
         type: String,
