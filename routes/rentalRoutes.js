@@ -5,7 +5,7 @@ let Rental = require('../models/Rental');
 let Item = require('../models/Item');
 
 //Adding Middleware for Auth
-const authMiddleware = require('../middlewares/authMiddleware');
+const authMiddleware = require('../middlewares/auth');
 
 const router = express.Router();
 

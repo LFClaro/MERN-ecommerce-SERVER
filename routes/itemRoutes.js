@@ -6,7 +6,7 @@ const { check, validationResult } = require('express-validator');
 let Item = require('../models/Item');
 
 //Adding Middleware for Auth
-const authMiddleware = require('../middlewares/authMiddleware');
+const authMiddleware = require('../middlewares/auth');
 
 const router = express.Router();
 
