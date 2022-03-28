@@ -72,6 +72,7 @@ router.post(
     [
         check('name', 'Name is required').not().isEmpty(),
         check('description', 'Description is required').not().isEmpty(),
+        check('category', 'Category is required').not().isEmpty(),
         check('price', 'Price is required').not().isEmpty(),
         check('price', 'Price needs to be in a valid currency').isCurrency()
     ],
@@ -108,6 +109,7 @@ router.post(
                 user: req.user.id,
                 name: req.body.name,
                 description: req.body.description,
+                category: req.body.category,
                 image: imageUrl,
                 price: req.body.price,
             });
@@ -152,6 +154,7 @@ router.put(
         check('id', 'Item ID is required').not().isEmpty(),
         check('name', 'Name is required').not().isEmpty(),
         check('description', 'Description is required').not().isEmpty(),
+        check('category', 'Category is required').not().isEmpty(),
         check('price', 'Price is required').not().isEmpty(),
         check('price', 'Price needs to be in a valid currency').isCurrency()
     ],
@@ -191,6 +194,7 @@ router.put(
             item.user = req.user.id;
             item.name = req.body.name;
             item.description = req.body.description;
+            item.category = req.body.category;
             item.image = imageUrl;
             item.price = req.body.price;
             item.updated = Date.now();

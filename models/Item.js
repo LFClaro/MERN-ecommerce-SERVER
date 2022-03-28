@@ -5,6 +5,7 @@ const itemSchema = Schema({
     user: { type: Schema.Types.ObjectId, ref: 'users' },
     name: { type: String, require: [true, 'Item must have a Name'] },
     description: { type: String, require: [true, 'Item must have a Description'] },
+    category: { type: String, require: [true, 'Item must have a Category'] },
     image: { type: String },
     price: { type: Number, required: true},
     overallRating: { type: [Number], required: true },
