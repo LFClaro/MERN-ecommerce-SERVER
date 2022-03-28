@@ -1,16 +1,16 @@
 const express = require('express');
-const uuid = require('uuid');
 const { check, validationResult } = require('express-validator');
 
 let Rental = require('../models/Rental');
+let Item = require('../models/Item');
 
 //Adding Middleware for Auth
-const authMiddleware = require('../middlewares/auth');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
 //Route GET api/rentals
-//model: Get all rentals
+//model: Get all rentals by user id
 //Access: public
 router.get('/', authMiddleware, async (req, res) => {
     try {
@@ -45,10 +45,11 @@ router.post(
     '/',
     authMiddleware,
     [
-        check('date', 'Date is required').not().isEmpty(),
-        check('date', 'Date needs to be valid').isDate(),
-        check('days', 'Amount of days is required').not().isEmpty(),
-        check('days', 'Amoutn of days nees to be a valid number').isInt()
+        check('itemId', 'Item ID is required').not().isEmpty(),
+        check('rentalDate', 'Date is required').not().isEmpty(),
+        check('rentalDate', 'Date needs to be valid').isDate(),
+        check('returnDate', 'Date is required').not().isEmpty(),
+        check('returnDate', 'Date needs to be valid').isDate()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -58,10 +59,10 @@ router.post(
 
         try {
             const newRental = await Rental.create({
-                item: req.item.id,
+                item: req.body.itemId,
                 user: req.user.id,
-                date: req.body.date,
-                days: req.body.days,
+                rentalDate: req.body.rentalDate,
+                returnDate: req.body.returnDate,
             });
             res.send(newRental);
         } catch (err) {
@@ -96,10 +97,11 @@ router.put(
     '/',
     authMiddleware,
     [
-        check('date', 'Date is required').not().isEmpty(),
-        check('date', 'Date must be valid').isDate(),
-        check('days', 'Amount of days is required').not().isEmpty(),
-        check('days', 'Amount of days must be a number').isInt()
+        check('itemId', 'Item ID is required').not().isEmpty(),
+        check('rentalDate', 'Date is required').not().isEmpty(),
+        check('rentalDate', 'Date needs to be valid').isDate(),
+        check('returnDate', 'Date is required').not().isEmpty(),
+        check('returnDate', 'Date needs to be valid').isDate()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -112,10 +114,10 @@ router.put(
                 return res.status(404).send('Rental not found');
             }
 
-            rental.item = req.item.id;
-            rental.user = req.user.id;
-            rental.date = req.body.date;
-            rental.days = req.body.days;
+            rental.item = req.body.itemId,
+                rental.user = req.user.id;
+            rental.rentalDate = req.body.rentalDate;
+            rental.returnDate = req.body.returnDate;
 
             await rental.save();
             res.send(rental);
@@ -124,5 +126,80 @@ router.put(
             return res.status(500).json({ error: 'SERVER ERROR: ' + err.message });
         }
     });
+
+//Route PATCH api/rentals/changeReturn/:id/:date
+//model: Update Rental by ID and reset returnDate
+//Access: public
+router.patch(
+    '/changeReturn/:id/:returnDate',
+    [
+        check('id', 'Rental id is required').not().isEmpty(),
+        check('returnDate', 'Date is required').not().isEmpty(),
+        check('returnDate', 'Date needs to be valid').isDate()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        var returnDate = req.params.returnDate;
+        try {
+            const rental = await Rental.findByIdAndUpdate(req.params.id, { $set: { returnDate: returnDate } });
+            if (!rental) {
+                return res.status(404).send('Rental not found');
+            }
+            await rental.save();
+            await res.send(rental);
+        } catch (err) {
+            console.log(err.message);
+            return res.status(500).json({ error: 'SERVER ERROR: ' + err.message });
+        }
+    }
+);
+
+//Route PATCH api/comment/:id
+//model: Update Rental by ID and insert comment
+//Access: public
+router.patch(
+    '/comment/:id',
+    [
+        check('id', 'Rental id is required').not().isEmpty(),
+        check('title', 'Title is required').not().isEmpty(),
+        check('text', 'Text body is required').not().isEmpty(),
+        check('rating', 'Rating is required').not().isEmpty(),
+        check('rating', 'Rating needs to be a valid number between 0 and 5').isInt({ min: 0, max: 5 })
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        var title = req.body.title;
+        var text = req.body.text;
+        var rating = req.body.rating;
+        var date = Date.now();
+
+        try {
+            const rental = await Rental.findByIdAndUpdate(req.params.id, { $set: { comment: { title: title, text: text, rating: rating, date: date } } });
+            if (!rental) {
+                return res.status(404).send('Rental not found');
+            }
+            await rental.save();
+
+            // The rating in this comment will go straight to the overallRating arry in the item Object
+            const item = await Item.findByIdAndUpdate(rental.item.toString(), { $push: { overallRating: rating } });
+            if (!item) {
+                return res.status(404).send('Item not found');
+            }
+            await item.save();
+
+            res.send(rental);
+        } catch (err) {
+            console.log(err.message);
+            return res.status(500).json({ error: 'SERVER ERROR: ' + err.message });
+        }
+    }
+);
 
 module.exports = router;
