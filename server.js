@@ -1,6 +1,7 @@
 const express = require('express');
 const connectDB = require('./config/connectDB');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 const dotenv = require('dotenv').config();
 
 const userRouter = require('./routes/userRoutes'); //responsible to user register
@@ -17,6 +18,7 @@ connectDB(); //Datebase Connected log should show in console
 
 const app = express();//create application to set up entire server
 app.use(cors());
+app.use(fileUpload()); // Set up fileUpload
 app.use(express.json());//****important for post */ allow u pass json information from the body by a formed post
 
 app.use('/api/users', userRouter);
