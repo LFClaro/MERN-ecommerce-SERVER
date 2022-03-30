@@ -47,6 +47,19 @@ router.get('/', authMiddleware, async (req, res) => {
     }
 });
 
+//Route GET api/items
+//model: Get all items from other users
+//Access: per user
+router.get('/products', authMiddleware, async (req, res) => {
+    try {
+        const itemDB = await Item.find({ user: {$ne: req.user.id} });
+        res.send(itemDB);
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).json({ error: 'SERVER ERROR: ' + err.message });
+    }
+});
+
 //Route GET api/items/:id
 //model: Get Item by id
 //Access: public
@@ -260,6 +273,7 @@ router.patch(
                 return res.status(404).send('Item not found');
             }
             item.isRented = !item.isRented;
+            item.updated = Date.now();
 
             await item.save();
             res.send(item);
