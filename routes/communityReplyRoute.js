@@ -25,7 +25,7 @@ router.get("/",auth, async (req, res) => {
 //access public
 router.get("/compost/:postid", async (req, res) => {
   try {
-    const CommunityPostID = await Community.find().where(req.params.postid); // find Community replies by post id
+    const CommunityPostID = await Community.find({postid: req.params.postid}); // find Community replies by post id
     if (!CommunityPostID) {
       return res.status(404).send("Community post not found");
     }
@@ -36,6 +36,18 @@ router.get("/compost/:postid", async (req, res) => {
 });
 // issues with the above - not working - gives server error 
 // TODO: ask prof for help on this one 
+
+router.get("/count/:postid", async (req, res) => {
+  try {
+    const CommunityPostID = await Community.count({postid: req.params.postid}); // find Community replies by post id and count replies
+    if (!CommunityPostID) {
+      return res.status(404).send("Community post not found");
+    }
+    res.json("count: " + CommunityPostID);
+  } catch (err) {
+    res.status(500).send("server error");
+  }
+});
 
 
 //route Get api/Community
