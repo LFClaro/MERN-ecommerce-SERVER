@@ -12,6 +12,7 @@ const communityReplyRoute = require('./routes/communityReplyRoute');// get acces
 const communityPostRoute = require('./routes/communityPostRoute');// get access to our community route
 const profileRoute = require('./routes/profileRoute');// get access to our profile route
 const itemRoute = require('./routes/itemRoutes'); // access item route
+const messageRoute = require('./routes/messageRoute'); // access message route
 const rentalRoute = require('./routes/rentalRoutes'); // access rental route
 
 connectDB(); //Datebase Connected log should show in console
@@ -29,6 +30,7 @@ app.use('/api/communityReply', communityReplyRoute);
 app.use('/api/communityPost', communityPostRoute);
 app.use('/api/profile', profileRoute);
 app.use('/api/items', itemRoute);
+app.use('/api/messages', messageRoute);
 app.use('/api/rentals', rentalRoute);
 
 const PORT = process.env.PORT | 5000;
