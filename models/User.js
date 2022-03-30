@@ -18,6 +18,11 @@ const userSchema = Schema({
         type: String,
         require: true,
     },
+    role: {
+        type: String,
+        require: true,
+        default: "guest",
+    },
     date: {
         type: Date,
         default: Date.now(),
