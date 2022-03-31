@@ -40,7 +40,7 @@ router.get("/:id", async (req, res) => {
     if (!communityPostID) {
       return res.status(404).send("Community message not found");
     }
-    res.send(communityPostID);
+    res.send(communityPostID); 
   } catch (err) {
     res.status(500).send("server error");
   }
@@ -70,8 +70,9 @@ router.post(
 
       const newCommunity = await Community.create({ // if above is valid create a new Community
         user: req.user.id,
-        username: req.user.name,
+        username: req.user.email, // make us have just name not fname last name and make required - email for now
         title: req.body.title,
+        content: req.body.content,
         category: req.body.category,
         picture: req.body.picture,
         date: today,

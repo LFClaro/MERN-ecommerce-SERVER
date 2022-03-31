@@ -9,10 +9,14 @@ const communitySchema = Schema({
   username: {
     type: String,
     require: [true, 'Please add your name'], // get this from db
-  }, 
+  },  
   title: {
     type: String,
     require: [true, 'Please add a title'], 
+  },
+  content: {
+    type: String,
+    require: [true, 'Please add content'], 
   },
   category: {
     type: String,

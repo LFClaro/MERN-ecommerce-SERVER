@@ -6,7 +6,7 @@ const communitySchema = Schema({
     type: Schema.Types.ObjectId,
     ref: 'users',
   },
-  username: {
+  username: { 
     type: String,
     require: [true], // get this from db
   }, 

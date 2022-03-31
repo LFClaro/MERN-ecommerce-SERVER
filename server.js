@@ -32,7 +32,7 @@ app.use('/api/profile', profileRoute);
 app.use('/api/items', itemRoute);
 app.use('/api/messages', messageRoute);
 app.use('/api/rentals', rentalRoute);
-
+ 
 const PORT = process.env.PORT | 5000;
 app.listen(PORT, 'localhost', () => {
     console.log(`The server is running on Port ${PORT}`);
