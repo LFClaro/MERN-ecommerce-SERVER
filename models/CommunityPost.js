@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+//  this is for admin - they will be creating the post and the users can reply to posts 
 const communitySchema = Schema({
   user: {
     type: Schema.Types.ObjectId,

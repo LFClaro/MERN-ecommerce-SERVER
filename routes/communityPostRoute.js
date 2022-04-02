@@ -101,26 +101,34 @@ router.delete("/", async (req, res) => {
   }
 });
 
-//route PUT api/contact
-//desc update contact by id - dont think we will need this 
-//access public
-// router.put("/", async (req, res) => {
-//   try {
-//     const contactUpdate = await Contact.findById(req.body.id);
-//     if (!contactUpdate) {
-//       return res.status(404).send("contact not found");
-//     }
+// route PUT api/communityPost
+// desc update post by id - dont think we will need this 
+// access public
+router.put("/", async (req, res) => {
+  try {
+    const comPostUpdate = await Community.findById(req.body.id);
+    if (!comPostUpdate) {
+      return res.status(404).send("com post not found");
+    }
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = mm + '/' + dd + '/' + yyyy;
 
-//     contactUpdate.name = req.body.name;
-//     contactUpdate.email = req.body.email;
-//     contactUpdate.subject = req.body.subject;
-//     contactUpdate.message = req.body.message;
+    // comPostUpdate.user = req.body.user;
+    // comPostUpdate.username = req.body.username;
+    comPostUpdate.title = req.body.title;
+    comPostUpdate.content = req.body.content;
+    comPostUpdate.category = req.body.category;
+    comPostUpdate.picture = req.body.picture;
+    comPostUpdate.date = today,
 
-//     await contactUpdate.save();
-//     res.send(contactUpdate);
-//   } catch (err) {
-//     return res.status(500).json({ error: "Server error" });
-//   }
-// });
+    await comPostUpdate.save();
+    res.send(comPostUpdate);
+  } catch (err) {
+    return res.status(500).json({ error: "Server error" });
+  }
+});
 
 module.exports = router;
