@@ -129,26 +129,4 @@ router.delete("/", async (req, res) => {
   }
 });
 
-//route PUT api/contact
-//desc update contact by id - dont think we will need this 
-//access public
-// router.put("/", async (req, res) => {
-//   try {
-//     const contactUpdate = await Contact.findById(req.body.id);
-//     if (!contactUpdate) {
-//       return res.status(404).send("contact not found");
-//     }
-
-//     contactUpdate.name = req.body.name;
-//     contactUpdate.email = req.body.email;
-//     contactUpdate.subject = req.body.subject;
-//     contactUpdate.message = req.body.message;
-
-//     await contactUpdate.save();
-//     res.send(contactUpdate);
-//   } catch (err) {
-//     return res.status(500).json({ error: "Server error" });
-//   }
-// });
-
 module.exports = router;
