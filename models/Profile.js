@@ -25,15 +25,7 @@ const profileSchema = Schema({
   address: {
     type: String,
     require: [true, 'Please add a address'],
-  },
-  // productsRenting: { // how do i define what is inside this array?
-  //   type: Array,
-  //   require: [false],
-  // },
-  // productsLeasing: { // how do i define what is inside this array?
-  //   type: Array,
-  //   require: [false],
-  // },
+  },  
 });
 
 module.exports = mongoose.model('Profile', profileSchema);
