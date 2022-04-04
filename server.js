@@ -7,6 +7,7 @@ const dotenv = require('dotenv').config();
 const userRouter = require('./routes/userRoutes'); //responsible to user register
 const authRouter = require('./routes/authRoutes'); //responsible authorize user
 const faqRouter = require('./routes/faqRoutes'); //responsible for faq
+const checkoutRoute = require('./routes/checkoutRoutes'); // get access to our checkout route
 const contactRoute = require('./routes/contactRoutes'); // get access to our contact route
 const communityReplyRoute = require('./routes/communityReplyRoute');// get access to our community route
 const communityPostRoute = require('./routes/communityPostRoute');// get access to our community route
@@ -25,6 +26,7 @@ app.use(express.json());//****important for post */ allow u pass json informatio
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/faqs', faqRouter);
+app.use('/api/checkout', checkoutRoute);
 app.use('/api/contact', contactRoute);
 app.use('/api/communityReply', communityReplyRoute);
 app.use('/api/communityPost', communityPostRoute);
