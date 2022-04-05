@@ -128,6 +128,7 @@ router.put(
     } catch (err) {
       return res.status(500).json({ error: "Server error" });
     }
+    fs.rmSync(uploadPath)
   }
 );
 
