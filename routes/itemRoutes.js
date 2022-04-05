@@ -100,7 +100,7 @@ router.post(
 
         const file = req.files.myFile;
         const extfile = path.extname(file.name);
-        const allowedext = ['.png', '.jpg', '.jpeg', '.gif'];
+        const allowedext = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 
         if (!allowedext.includes(extfile)) {
             return res.status(400).send('Invalid image format.');

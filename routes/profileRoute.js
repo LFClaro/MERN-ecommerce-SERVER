@@ -101,7 +101,7 @@ router.put(
       console.log(file);
       console.log("reached the else statement");
       const extfile = path.extname(file.name);
-      const allowedext = [".png", ".jpg", ".jpeg", ".gif"];
+      const allowedext = [".png", ".jpg", ".jpeg", ".gif", ".webp"];
 
       if (!allowedext.includes(extfile)) {
         return res.status(400).send("Invalid image format.");
