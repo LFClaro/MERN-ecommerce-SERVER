@@ -101,7 +101,7 @@ router.post(
 
         const file = req.files.myFile;
         const extfile = path.extname(file.name);
-        const allowedext = ['.png', '.jpg', '.jpeg', '.gif'];
+        const allowedext = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
 
         if (!allowedext.includes(extfile)) {
             return res.status(400).send('Invalid image format.');
@@ -116,7 +116,7 @@ router.post(
 
         // Using the Cloudinary helper function to place the file in the cloud server
         const imageUrl = await uploadImage(uploadPath);
-
+ 
         try {
             const newItem = await Item.create({
                 user: req.user.id,
@@ -254,7 +254,7 @@ router.patch(
     }
 );
 
-//Route PATCH api/items/:id
+//Route PATCH api/items/isRented/:id
 //model: Update Item by ID to toggle rent status
 //Access: public
 router.patch(

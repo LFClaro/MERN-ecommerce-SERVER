@@ -3,6 +3,7 @@ const uuid = require("uuid"); // for creating unique ids
 const { check, validationResult } = require("express-validator"); // used for validation
 
 let Profile = require("../models/Profile"); // get access to our contact model
+let Item = require('../models/Item'); // get access to our item model
 const auth = require("../middlewares/auth"); // get access to our middleware
 const router = express.Router(); // create router obj
 
@@ -68,25 +69,63 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() }); // returns the error in json format if the error obj is not empty
     }
-    
-      // const profile = await Profile.find({ user: req.user.id });
-      var query = {'user': req.user.id};      
-      try {
-        const profile = await Profile.findOneAndUpdate(query, 
-          // { user: req.user.id },
-          {firstname: req.body.firstname,
+
+    // const profile = await Profile.find({ user: req.user.id });
+    var query = { 'user': req.user.id };
+    try {
+      const profile = await Profile.findOneAndUpdate(query,
+        // { user: req.user.id },
+        {
+          firstname: req.body.firstname,
           lastname: req.body.lastname,
           email: req.body.email,
           phone: req.body.phone,
-          address: req.body.address},
-          { upsert: true, new: true },
-          );
-        
-            await profile.save();
-            res.send(profile);
-          } catch (err) {
-            return res.status(500).json({ error: "Server error" });
-          }
+          address: req.body.address
+        },
+        { upsert: true, new: true },
+      );
+
+      await profile.save();
+      res.send(profile);
+    } catch (err) {
+      return res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+//Route PATCH api/profile/liked/:id
+//model: Update Rental by ID and insert comment
+//Access: public
+router.patch(
+  '/liked/:itemId',
+  auth,
+  [
+    check('itemId', 'Item id is required').not().isEmpty()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    var query = { user: req.user.id };
+    try {
+      const item = await Item.findById(req.params.itemId)
+      if (!item) {
+          return res.status(404).send('Item not found');
+      }
+
+      const profile = await Profile.findOneAndUpdate(query, { $push: { likedList: req.params.itemId } });
+      if (!profile) {
+        return res.status(404).send('Profile not found');
+      }
+      await profile.save();
+
+      res.send(profile);
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).json({ error: 'SERVER ERROR: ' + err.message });
+    }
   }
 );
 

@@ -25,7 +25,12 @@ const profileSchema = Schema({
   address: {
     type: String,
     require: [true, 'Please add a address'],
-  },  
+  },
+  likedList: {
+    type: [Schema.Types.ObjectId],
+    ref: 'items',
+    default: []
+  }
 });
 
 module.exports = mongoose.model('Profile', profileSchema);
