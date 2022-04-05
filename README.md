@@ -10,3 +10,8 @@
 - [x] Community Post back end finished 
 - [x] Community Reply back end finished
 - [x] Profile back end finished
+
+# Yunqian(ALex)'s Back End
+- [x] Login/Register/Authorization back end finished
+- [x] FAQs CRUD finished
+- [x] 
