@@ -25,7 +25,6 @@ async function uploadImage(file) {
             file,
             { public_id: file.name },
             function (error, result) {
-
                 console.log(result);
                 resolve(result.secure_url);
                 return result.secure_url;
@@ -182,13 +181,14 @@ router.put(
                 return res.status(404).send('Item not found');
             }
 
+            // Image Uploading Starts here
             if (!req.files || Object.keys(req.files).length === 0) {
                 return res.status(400).send('No files were uploaded.');
             }
     
             const file = req.files.myFile;
             const extfile = path.extname(file.name);
-            const allowedext = ['.png', '.jpg', '.gif'];
+            const allowedext = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
     
             if (!allowedext.includes(extfile)) {
                 return res.status(400).send('Invalid image format.');
