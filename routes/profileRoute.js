@@ -1,6 +1,6 @@
 const express = require("express"); // used for our server
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 const { check, validationResult } = require("express-validator"); // used for validation
 
 let Profile = require("../models/Profile"); // get access to our contact model
@@ -89,27 +89,63 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() }); // returns the error in json format if the error obj is not empty
     }
-    const file = req.files.myFile;
-    const extfile = path.extname(file.name);
-    const allowedext = [".png", ".jpg", ".jpeg", ".gif"];
+    let imageUrl = '';
+    let uploadPath = '';
+    if (!req.files || Object.keys(req.files).length === 0) {
+      // return res.status(400).send("No files were uploaded.");
+      imageUrl = '';
+      console.log("in first if check");
+    } 
+    else {
+      const file = req.files.myFile;
+      console.log(file);
+      console.log("reached the else statement");
+      const extfile = path.extname(file.name);
+      const allowedext = [".png", ".jpg", ".jpeg", ".gif"];
 
-    if (!allowedext.includes(extfile)) {
-      return res.status(400).send("Invalid image format.");
+      if (!allowedext.includes(extfile)) {
+        return res.status(400).send("Invalid image format.");
+      }
+
+      uploadPath = "public/uploads/" + file.name;
+
+      // Using the mv() method to temporariyl store the file in the server
+      file.mv(uploadPath, function (err) {
+        if (err) return res.status(500).send(err);
+      });
+
+      // Using the Cloudinary helper function to place the file in the cloud server
+      imageUrl = await uploadImage(uploadPath);
     }
 
-    const uploadPath = "public/uploads/" + file.name;
-
-    // Using the mv() method to temporariyl store the file in the server
-    file.mv(uploadPath, function (err) {
-      if (err) return res.status(500).send(err);
-    });
-
-    // Using the Cloudinary helper function to place the file in the cloud server
-    const imageUrl = await uploadImage(uploadPath);
-
     // const profile = await Profile.find({ user: req.user.id });
+   
     var query = { user: req.user.id };
-    try {
+
+    if(imageUrl == '')
+    {
+      try {
+        const profile = await Profile.findOneAndUpdate(
+          query,
+          // { user: req.user.id },
+          {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            phone: req.body.phone,
+            address: req.body.address,            
+          },
+          { upsert: true, new: true }
+        );
+  
+        await profile.save();
+        res.send(profile);
+      } catch (err) {
+        return res.status(500).json({ error: "Server error" });
+      }      
+    }
+    else 
+    {
+      try {
       const profile = await Profile.findOneAndUpdate(
         query,
         // { user: req.user.id },
@@ -118,7 +154,7 @@ router.put(
           lastname: req.body.lastname,
           phone: req.body.phone,
           address: req.body.address,
-          image: imageUrl
+          image: imageUrl,
         },
         { upsert: true, new: true }
       );
@@ -128,7 +164,9 @@ router.put(
     } catch (err) {
       return res.status(500).json({ error: "Server error" });
     }
-    fs.rmSync(uploadPath)
+    fs.rmSync(uploadPath);
+    }
+    
   }
 );
 
