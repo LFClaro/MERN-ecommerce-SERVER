@@ -10,6 +10,7 @@ const itemSchema = Schema({
     price: { type: Number, required: true},
     overallRating: { type: [Number], required: true },
     isRented: { type: Boolean, required: true, default: false },
+    currentRental: { type: Schema.Types.ObjectId, ref: 'rentals'},
     updated: { type: Date, required: true, default: Date.now() },
 });
 
