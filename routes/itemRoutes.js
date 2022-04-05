@@ -116,7 +116,7 @@ router.post(
 
         // Using the Cloudinary helper function to place the file in the cloud server
         const imageUrl = await uploadImage(uploadPath);
-
+ 
         try {
             const newItem = await Item.create({
                 user: req.user.id,
