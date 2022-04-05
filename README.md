@@ -11,7 +11,7 @@
 - [x] Community Reply back end finished
 - [x] Profile back end finished
 
-# Yunqian(ALex)'s Back End
+# Yunqian(Alex)'s Back End
 
 - [x] Login/Register/Authorization back end finished
 - [x] FAQs CRUD finished
@@ -31,3 +31,8 @@
 - [x] Message back end code finished
 
 Environment Variables
+NODE_ENV = development
+PORT = YOUR_PORT
+MONGO_DB_CONN = YOUR_MONGODB_CONNECTION
+JWT_SECRET = secret
+STRIPE_SECRET_KEY=sk_test_51KStzzGm4MuMFls1sfvW7jAUDdwwzzwE4Wx1EjcRIfep7QtY7HwVoNt0NrcCdR3epQAEotCQeKFZJ92w75YTuTt700gYA35Z8M
