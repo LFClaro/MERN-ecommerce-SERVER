@@ -13,11 +13,7 @@ const profileSchema = Schema({
   lastname: {
     type: String,
     require: [true, 'Please add your last name'],
-  },
-  email: {
-    type: String,
-    require: [true, 'Please add your email'],
-  },
+  },  
   phone: {
     type: String,
     require: [true, 'Please add a phone'],
@@ -30,7 +26,11 @@ const profileSchema = Schema({
     type: [Schema.Types.ObjectId],
     ref: 'items',
     default: []
-  }
+  },
+  image: { 
+    type: String,
+    default: 'https://res.cloudinary.com/mernmaniacs/image/upload/v1649119596/profile_ftjfbn.jpg'
+  },
 });
 
 module.exports = mongoose.model('Profile', profileSchema);
