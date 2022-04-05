@@ -1,10 +1,34 @@
 const express = require("express"); // used for our server
-const uuid = require("uuid"); // for creating unique ids
+const path = require('path');
+const fs = require('fs');
 const { check, validationResult } = require("express-validator"); // used for validation
 
 let Profile = require("../models/Profile"); // get access to our contact model
 const auth = require("../middlewares/auth"); // get access to our middleware
 const router = express.Router(); // create router obj
+
+//Setting up Cloudinary for image storage
+const cloudinary = require("cloudinary");
+cloudinary.config({
+  cloud_name: "mernmaniacs",
+  api_key: "661941435579653",
+  api_secret: "iA-_PVMI1J-7A5b777HvHmF3Uls",
+});
+
+// Cloudinary helper function
+async function uploadImage(file) {
+  return new Promise((resolve) => {
+    cloudinary.v2.uploader.upload(
+      file,
+      { public_id: file.name },
+      function (error, result) {
+        console.log(result);
+        resolve(result.secure_url);
+        return result.secure_url;
+      }
+    );
+  });
+}
 
 //route Get api/Profile
 //desc Get all Profiles from user id - for admin purposes
@@ -50,15 +74,14 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-
 //route Put api/Profile
-//desc Add a Profile or update if it exists - for users to submit a Profile 
+//desc Add a Profile or update if it exists - for users to submit a Profile
 //access public
 router.put(
   "/",
   auth,
   [check("firstname", "Your first name is required").not().isEmpty()], // checking for validation
-  [check("lastname", "Your last name is required").not().isEmpty()],  
+  [check("lastname", "Your last name is required").not().isEmpty()],
   [check("phone", "A phone is required").not().isEmpty()],
   [check("address", "A address is required").not().isEmpty()],
   async (req, res) => {
@@ -66,30 +89,50 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() }); // returns the error in json format if the error obj is not empty
     }
-    
-      // const profile = await Profile.find({ user: req.user.id });
-      var query = {'user': req.user.id};      
-      try {
-        const profile = await Profile.findOneAndUpdate(query, 
-          // { user: req.user.id },
-          {firstname: req.body.firstname,
-          lastname: req.body.lastname,          
+    const file = req.files.myFile;
+    const extfile = path.extname(file.name);
+    const allowedext = [".png", ".jpg", ".jpeg", ".gif"];
+
+    if (!allowedext.includes(extfile)) {
+      return res.status(400).send("Invalid image format.");
+    }
+
+    const uploadPath = "public/uploads/" + file.name;
+
+    // Using the mv() method to temporariyl store the file in the server
+    file.mv(uploadPath, function (err) {
+      if (err) return res.status(500).send(err);
+    });
+
+    // Using the Cloudinary helper function to place the file in the cloud server
+    const imageUrl = await uploadImage(uploadPath);
+
+    // const profile = await Profile.find({ user: req.user.id });
+    var query = { user: req.user.id };
+    try {
+      const profile = await Profile.findOneAndUpdate(
+        query,
+        // { user: req.user.id },
+        {
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
           phone: req.body.phone,
-          address: req.body.address},
-          { upsert: true, new: true },
-          );
-        
-            await profile.save();
-            res.send(profile);
-          } catch (err) {
-            return res.status(500).json({ error: "Server error" });
-          }
+          address: req.body.address,
+          image: imageUrl
+        },
+        { upsert: true, new: true }
+      );
+
+      await profile.save();
+      res.send(profile);
+    } catch (err) {
+      return res.status(500).json({ error: "Server error" });
+    }
   }
 );
 
-
 //route Post api/Profile
-//desc Add a Profile - for users to submit a Profile 
+//desc Add a Profile - for users to submit a Profile
 //access public
 // router.post(
 //   "/", auth,
@@ -161,7 +204,7 @@ router.put(
 //           address: req.body.address,
 //         });
 //         await newProfile.save();
-//         res.send(newProfile); 
+//         res.send(newProfile);
 //       }
 
 //       // how do i return a email or thank you  to the user?
