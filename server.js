@@ -15,6 +15,7 @@ const profileRoute = require('./routes/profileRoute');// get access to our profi
 const itemRoute = require('./routes/itemRoutes'); // access item route
 const messageRoute = require('./routes/messageRoute'); // access message route
 const rentalRoute = require('./routes/rentalRoutes'); // access rental route
+const adminRoute = require('./routes/adminRoutes'); //access to admin panel
 
 connectDB(); //Datebase Connected log should show in console
 
@@ -34,6 +35,7 @@ app.use('/api/profile', profileRoute);
 app.use('/api/items', itemRoute);
 app.use('/api/messages', messageRoute);
 app.use('/api/rentals', rentalRoute);
+app.use('api/admin', adminRoute);
  
 const PORT = process.env.PORT | 5000;
 app.listen(PORT, 'localhost', () => {
