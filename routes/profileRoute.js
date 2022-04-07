@@ -1,11 +1,19 @@
 const express = require("express"); // used for our server
 const path = require("path");
 const fs = require("fs");
+const NodeGeocoder = require('node-geocoder');
 const { check, validationResult } = require("express-validator"); // used for validation
 
 let Profile = require("../models/Profile"); // get access to our contact model
-const auth = require("../middlewares/auth"); // get access to our middleware
+const auth = require('../middlewares/auth');; // get access to our middleware
 const router = express.Router(); // create router obj
+
+//ALex: setting for the geocode
+const geocoder = NodeGeocoder({
+  provider: 'google',
+  apiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
+  formatter: null
+})
 
 //Setting up Cloudinary for image storage
 const cloudinary = require("cloudinary");
@@ -95,7 +103,7 @@ router.put(
       // return res.status(400).send("No files were uploaded.");
       imageUrl = '';
       console.log("in first if check");
-    } 
+    }
     else {
       const file = req.files.myFile;
       console.log(file);
@@ -119,11 +127,22 @@ router.put(
     }
 
     // const profile = await Profile.find({ user: req.user.id });
-   
+
+    //Alex: get the address's geolocation************************************
+    let latitude;
+    let longitude;
+    try {
+      let geolocation = await geocoder.geocode(req.body.address);
+      latitude = geolocation[0].latitude;
+      longitude = geolocation[0].longitude;
+    } catch (e) {
+      return res.status(500).json({ error: "The address is not found" })
+    }
+    //****************************************************************** */
+
     var query = { user: req.user.id };
 
-    if(imageUrl == '')
-    {
+    if (imageUrl == '') {
       try {
         const profile = await Profile.findOneAndUpdate(
           query,
@@ -132,41 +151,42 @@ router.put(
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             phone: req.body.phone,
-            address: req.body.address,            
+            address: req.body.address,
+            lat: latitude,
+            lng: longitude,
           },
           { upsert: true, new: true }
         );
-  
+
         await profile.save();
         res.send(profile);
       } catch (err) {
         return res.status(500).json({ error: "Server error" });
-      }      
+      }
     }
-    else 
-    {
+    else {
       try {
-      const profile = await Profile.findOneAndUpdate(
-        query,
-        // { user: req.user.id },
-        {
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
-          phone: req.body.phone,
-          address: req.body.address,
-          image: imageUrl,
-        },
-        { upsert: true, new: true }
-      );
+        const profile = await Profile.findOneAndUpdate(
+          query,
+          // { user: req.user.id },
+          {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            phone: req.body.phone,
+            address: req.body.address,
+            image: imageUrl,
+          },
+          { upsert: true, new: true }
+        );
 
-      await profile.save();
-      res.send(profile);
-    } catch (err) {
-      return res.status(500).json({ error: "Server error" });
+        await profile.save();
+        res.send(profile);
+      } catch (err) {
+        return res.status(500).json({ error: "Server error" });
+      }
+      fs.rmSync(uploadPath);
     }
-    fs.rmSync(uploadPath);
-    }
-    
+
   }
 );
 
