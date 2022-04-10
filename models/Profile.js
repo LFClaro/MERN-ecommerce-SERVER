@@ -26,7 +26,7 @@ const profileSchema = Schema({
     type: [Schema.Types.ObjectId],
     ref: 'items',
     default: []
-  },
+  }, 
   image: { 
     type: String,
     default: 'https://res.cloudinary.com/mernmaniacs/image/upload/v1649119596/profile_ftjfbn.jpg'

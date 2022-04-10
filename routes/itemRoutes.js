@@ -23,7 +23,7 @@ async function uploadImage(file) {
     return new Promise(resolve => {
         cloudinary.v2.uploader.upload(
             file,
-            { public_id: file.name },
+            { public_id: file.name },  
             function (error, result) {
                 console.log(result);
                 resolve(result.secure_url);
