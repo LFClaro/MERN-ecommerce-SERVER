@@ -61,11 +61,11 @@ router.post(
     authMiddleware,
     [
         check('itemId', 'Item ID is required').not().isEmpty(),
-        check('rentalDate', 'Date is required').not().isEmpty(),
-        check('rentalDate', 'Date needs to be valid').isDate(),
-        check('rentalDate', 'Date needs to be valid').isDate(),
-        check('returnDate', 'Date is required').not().isEmpty(),
-        check('returnDate', 'Date needs to be valid').isDate()
+        // check('rentalDate', 'Date is required').not().isEmpty(),
+        // check('rentalDate', 'Date needs to be valid').isDate(),
+        // check('rentalDate', 'Date needs to be valid').isDate(),
+        // check('returnDate', 'Date is required').not().isEmpty(),
+        // check('returnDate', 'Date needs to be valid').isDate()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -83,16 +83,14 @@ router.post(
                 return res.status(404).send('Item is currently rented');
             }
 
-            if (Date.parse(req.body.rentalDate) < today || Date.parse(req.body.returnDate) < today) {
-                console.log(today);
-                return res.status(404).send("Return or Rental Date invalid");
-            }
+            // if (Date.parse(req.body.rentalDate) < today || Date.parse(req.body.returnDate) < today) {
+            //     console.log(today);
+            //     return res.status(404).send("Return or Rental Date invalid");
+            // }
             
             const newRental = await Rental.create({
                 item: req.body.itemId,
                 user: req.user.id,
-                rentalDate: req.body.rentalDate,
-                returnDate: req.body.returnDate,
             });
 
             res.send(newRental);
