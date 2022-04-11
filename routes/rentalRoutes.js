@@ -207,7 +207,7 @@ router.patch(
         var title = req.body.title;
         var text = req.body.text;
         var rating = req.body.rating;
-        var date = today;
+        var date = Date.now();
 
         try {
             const rental = await Rental.findByIdAndUpdate(req.params.id, { $set: { comment: { title: title, text: text, rating: rating, date: date } } });
