@@ -8,7 +8,7 @@ const auth = require('../middlewares/auth');
 // models
 let Message = require("../models/message")
 let User = require('../models/User');
-const CommunityPost = require('../models/CommunityPost');
+const Profile = require('../models/Profile');
 
 // Checks if user on the URL matches what's in the token
 function isVerifiedUser(urlId, authId) {
@@ -31,8 +31,8 @@ router.post("/contacts", auth, async (req, res) => {
 
     try{ 
         // get all users except current user
-        const userDB = await User.find( { _id: { $ne: senderId } } );
-        res.send(userDB); 
+        const profileDB = await Profile.find( { user: { $ne: senderId } } );
+        res.send(profileDB); 
 
     } catch (err) {
         console.log(err.message);
@@ -120,12 +120,12 @@ router.post("/create", auth,
             message.messageData = req.body.messageData
 
             // get the name of the receiver
-            const receiverDisplayName = await User.findById(message.receiverId);
-            message.receiverDisplayName = receiverDisplayName.fname + " " + receiverDisplayName.lname
+            const receiverDisplayName = await Profile.find( { user: message.receiverId } )
+            message.receiverDisplayName = receiverDisplayName.firstname + " " + receiverDisplayName.lastname
 
             // get the name of the sender
-            const senderDisplayName = await User.findById(message.senderId);
-            message.senderDisplayName = senderDisplayName.fname + " " + senderDisplayName.lname
+            const senderDisplayName = await Profile.find( { user: message.senderId } )
+            message.senderDisplayName = senderDisplayName.firstname + " " + senderDisplayName.lastname
 
             // save message
             message.save(message)
