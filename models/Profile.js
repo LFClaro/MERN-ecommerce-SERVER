@@ -18,7 +18,7 @@ const profileSchema = Schema({
     type: String,
     require: [true, 'Please add a phone'],
   },
-  address: {
+  address: { 
     type: String,
     require: [true, 'Please add a address'],
   },
