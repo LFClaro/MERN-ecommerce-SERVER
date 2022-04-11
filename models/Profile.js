@@ -25,7 +25,7 @@ const profileSchema = Schema({
   likedList: {
     type: [Schema.Types.ObjectId],
     ref: 'items',
-    default: []
+    default: [],
   },
   image: {
     type: String,

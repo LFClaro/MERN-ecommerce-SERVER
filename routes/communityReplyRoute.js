@@ -14,7 +14,7 @@ router.get("/", auth, async (req, res) => {
     const allCommunity = await Community.find({ user: req.user.id }); // finds all Community in db by the user id
     res.send(allCommunity);
   } catch (err) {
-    res.status(500).send("server error");
+    res.status(500).send("server error"); 
   }
 });
 
@@ -115,7 +115,7 @@ router.post(
       const newCommunityReply = await Community.create({
         // if above is valid create a new Community
         user: req.user.id,
-        username: req.user.name,
+        username: req.user.email,
         postid: req.body.postid,
         reply: req.body.reply,
         replyCount: rCount,

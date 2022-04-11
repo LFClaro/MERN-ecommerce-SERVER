@@ -45,7 +45,7 @@ router.post('/',
             const payload = {
                 user: {
                     id: user.id,
-                    name: user.email,
+                    email: user.email,
                     role: user.role,
                 },
             };
@@ -64,6 +64,7 @@ router.post('/',
         }
 
     });
+
 
 router.get('/',
     authMiddleware,
@@ -104,5 +105,6 @@ router.put('/',
             res.status(500).send('server error');
         }
     });
+
 
 module.exports = router;

@@ -18,10 +18,10 @@ const geocoder = NodeGeocoder({
 //Setting up Cloudinary for image storage
 const cloudinary = require("cloudinary");
 cloudinary.config({
-  cloud_name: "mernmaniacs",
+  cloud_name: "mernmaniacs", 
   api_key: "661941435579653",
   api_secret: "iA-_PVMI1J-7A5b777HvHmF3Uls",
-});
+}); 
 
 // Cloudinary helper function
 async function uploadImage(file) {

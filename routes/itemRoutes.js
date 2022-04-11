@@ -41,8 +41,8 @@ async function uploadImage(file) {
 //Access: per user
 router.get('/', authMiddleware, async (req, res) => {
     try {
-        // const itemDB = await Item.find({ user: req.user.id });
-        const itemDB = await Item.find();
+        const itemDB = await Item.find({ user: req.user.id });
+//         const itemDB = await Item.find();
         res.send(itemDB);
     } catch (err) {
         console.log(err.message);
