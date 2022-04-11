@@ -2,12 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = Schema({
-    fname: {
-        type: String,
-    },
-    lname: {
-        type: String,
-    },
+    // fname: String, //shorthand notation
+    // lname: String,
     email: {
         type: String,
         require: true,
@@ -22,6 +18,12 @@ const userSchema = Schema({
         type: String,
         require: true,
         default: "guest",
+    },
+    createAt: {
+        type: Date,
+        required: true,
+        default: Date.now,
+        immutable: true, //so this value can never be changed
     },
     date: {
         type: Date,

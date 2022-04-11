@@ -48,14 +48,23 @@ router.post(
 
             const salt = await bcrypt.genSalt(10);
             const password = await bcrypt.hash(req.body.password, salt);
+
             //create a new user and saved in the MongoDB
+            // Option 1
+            // const newUser = await User.create(({
+            //     email: req.body.email,
+            //     password: password,
+            // });
+
+            // option 2
             const newUser = new User({
                 email: req.body.email,
                 password: password,
             });
-            await newUser.save();
+            await newUser.save(); //save the new entity into MongoDB
 
             // console.log('New User saved to mongoDB: ', newUser);
+            // newUser.eamil="balabalabal@gmail.com";
 
             const payload = {
                 user: {
