@@ -4,6 +4,7 @@ const fs = require('fs');
 const { check, validationResult } = require('express-validator');
 
 let Item = require('../models/Item');
+let Profile = require('../models/Profile');
 
 //Adding Middleware for Auth
 const authMiddleware = require('../middlewares/auth');
@@ -23,8 +24,10 @@ async function uploadImage(file) {
     return new Promise(resolve => {
         cloudinary.v2.uploader.upload(
             file,
-            { public_id: file.name },  
+            { public_id: file.name },
+
             function (error, result) {
+                console.log(file.name)
                 console.log(result);
                 resolve(result.secure_url);
                 return result.secure_url;
@@ -39,6 +42,7 @@ async function uploadImage(file) {
 router.get('/', authMiddleware, async (req, res) => {
     try {
         const itemDB = await Item.find({ user: req.user.id });
+//         const itemDB = await Item.find();
         res.send(itemDB);
     } catch (err) {
         console.log(err.message);
@@ -51,7 +55,7 @@ router.get('/', authMiddleware, async (req, res) => {
 //Access: per user
 router.get('/products', authMiddleware, async (req, res) => {
     try {
-        const itemDB = await Item.find({ user: {$ne: req.user.id} });
+        const itemDB = await Item.find({ user: { $ne: req.user.id } });
         res.send(itemDB);
     } catch (err) {
         console.log(err.message);
@@ -89,6 +93,7 @@ router.post(
         check('price', 'Price needs to be in a valid currency').isCurrency()
     ],
     async (req, res) => {
+        console.log("req.user: ", req.user);
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -106,12 +111,16 @@ router.post(
             return res.status(400).send('Invalid image format.');
         }
 
-        const uploadPath = 'public/uploads/' + file.name;
+        const uploadPath = ('public/uploads/' + file.name).replace(/\s/g, '');
 
         // Using the mv() method to temporariyl store the file in the server
         file.mv(uploadPath, function (err) {
             if (err) return res.status(500).send(err);
         });
+
+        console.log(uploadPath);
+
+        const profile = await Profile.find({ user: req.user.id }); // find Profile by id, mainly want the geolocation
 
         // Using the Cloudinary helper function to place the file in the cloud server
         const imageUrl = await uploadImage(uploadPath);
@@ -124,7 +133,10 @@ router.post(
                 category: req.body.category,
                 image: imageUrl,
                 price: req.body.price,
+                lat: profile[0].lat,
+                lng: profile[0].lng,
             });
+            console.log("new item just added:", newItem);
             res.send(newItem);
         } catch (err) {
             console.log(err.message);
@@ -185,22 +197,22 @@ router.put(
             if (!req.files || Object.keys(req.files).length === 0) {
                 return res.status(400).send('No files were uploaded.');
             }
-    
+
             const file = req.files.myFile;
             const extfile = path.extname(file.name);
             const allowedext = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-    
+
             if (!allowedext.includes(extfile)) {
                 return res.status(400).send('Invalid image format.');
             }
-    
+
             const uploadPath = 'public/uploads/' + file.name;
-    
+
             // Using the mv() method to temporariyl store the file in the server
             file.mv(uploadPath, function (err) {
                 if (err) return res.status(500).send(err);
             });
-    
+
             // Using the Cloudinary helper function to place the file in the cloud server
             const imageUrl = await uploadImage(uploadPath);
 
