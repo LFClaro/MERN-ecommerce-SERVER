@@ -80,8 +80,8 @@ router.get("/:id", authMiddleware, async (req, res) => {
     console.log(userID);
 
     let itemAndUser = Object.assign({}, {"queryUser": userID}, itemDB); // Adding User who querid to the JSON response
-    // res.send(itemAndUser);
-    res.send(itemDB);
+    res.send(itemAndUser);
+    // res.send(itemDB);
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "SERVER ERROR: " + err.message });

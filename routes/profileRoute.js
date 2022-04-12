@@ -11,7 +11,7 @@ const router = express.Router(); // create router obj
 //ALex: setting for the geocode
 const geocoder = NodeGeocoder({
   provider: 'google',
-  apiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
+  apiKey: process.env.GOOGLE_MAP_API_KEY,
   formatter: null
 })
 
