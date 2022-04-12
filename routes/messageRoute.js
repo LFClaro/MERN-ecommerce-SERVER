@@ -6,7 +6,7 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../middlewares/auth');
 
 // models
-let Message = require("../models/message")
+let Message = require("../models/Message")
 let User = require('../models/User');
 const Profile = require('../models/Profile');
 
