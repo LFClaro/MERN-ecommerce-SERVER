@@ -16,11 +16,10 @@ const router = express.Router();
 const cloudinary = require("cloudinary");
 cloudinary.config({
   cloud_name: "mernmaniacs",
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_KEY,
-  api_key: "661941435579653",
-  api_secret: "iA-_PVMI1J-7A5b777HvHmF3Uls",
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
 
 // Cloudinary helper function
 async function uploadImage(file) {
