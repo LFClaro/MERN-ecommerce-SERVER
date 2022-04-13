@@ -47,6 +47,6 @@ app.get("/", (req, res) => {
 // app.use('api/admin', adminRoute);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, 'localhost', () => {
+app.listen(PORT, () => {
     console.log(`The server is running on Port ${PORT}`);
 })
