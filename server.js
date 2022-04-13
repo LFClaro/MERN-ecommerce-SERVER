@@ -24,19 +24,28 @@ app.use(cors());
 app.use(fileUpload()); // Set up fileUpload
 app.use(express.json());//****important for post */ allow u pass json information from the body by a formed post
 
-app.use('/api/users', userRouter);
-app.use('/api/auth', authRouter);
-app.use('/api/faqs', faqRouter);
-app.use('/api/checkout', checkoutRoute);
-app.use('/api/contact', contactRoute);
-app.use('/api/communityReply', communityReplyRoute);
-app.use('/api/communityPost', communityPostRoute);
-app.use('/api/profile', profileRoute);
-app.use('/api/items', itemRoute);
-app.use('/api/messages', messageRoute);
-app.use('/api/rentals', rentalRoute);
-app.use('api/admin', adminRoute);
- 
+app.get("/", (req, res) => {
+    try {
+        res.send("Hello, World!");
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).json({ error: "SERVER ERROR: " + err.message });
+    }
+});
+
+// app.use('/api/users', userRouter);
+// app.use('/api/auth', authRouter);
+// app.use('/api/faqs', faqRouter);
+// app.use('/api/checkout', checkoutRoute);
+// app.use('/api/contact', contactRoute);
+// app.use('/api/communityReply', communityReplyRoute);
+// app.use('/api/communityPost', communityPostRoute);
+// app.use('/api/profile', profileRoute);
+// app.use('/api/items', itemRoute);
+// app.use('/api/messages', messageRoute);
+// app.use('/api/rentals', rentalRoute);
+// app.use('api/admin', adminRoute);
+
 const PORT = process.env.PORT | 5000;
 app.listen(PORT, 'localhost', () => {
     console.log(`The server is running on Port ${PORT}`);
