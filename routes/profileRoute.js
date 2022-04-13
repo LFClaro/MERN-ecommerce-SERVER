@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const NodeGeocoder = require('node-geocoder');
 const { check, validationResult } = require("express-validator"); // used for validation
+const dotenv = require('dotenv').config();
 
 let Profile = require("../models/Profile"); // get access to our contact model
 const auth = require('../middlewares/auth');; // get access to our middleware
@@ -19,8 +20,8 @@ const geocoder = NodeGeocoder({
 const cloudinary = require("cloudinary");
 cloudinary.config({
   cloud_name: "mernmaniacs", 
-  api_key: "661941435579653",
-  api_secret: "iA-_PVMI1J-7A5b777HvHmF3Uls",
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 }); 
 
 // Cloudinary helper function
