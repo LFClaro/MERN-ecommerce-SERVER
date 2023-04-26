@@ -1,9 +1,12 @@
 {
   "name": "mernmaniacs-backend",
   "version": "1.0.0",
+  "homepage": "https://lfclaro.github.io/MERN-ecommerce-SERVER",
   "description": "",
   "main": "server.js",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "server": "nodemon server.js",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "gh-pages": "^5.0.0",
     "nodemon": "^2.0.15"
   },
   "dependencies": {

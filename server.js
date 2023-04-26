@@ -26,7 +26,7 @@ app.use(express.json());//****important for post */ allow u pass json informatio
 
 app.get("/", (req, res) => {
     try {
-        res.send("Hello, World!");
+        res.send("Hello, World!\nThis is the MERN-ecommerce API server.");
     } catch (err) {
         console.log(err.message);
         return res.status(500).json({ error: "SERVER ERROR: " + err.message });
