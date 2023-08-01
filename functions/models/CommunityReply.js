@@ -1,22 +1,23 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+// eslint-disable-next-line new-cap
 const communitySchema = Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: "users",
   },
-  username: { 
+  username: {
     type: String,
     require: [true], // get this from db
-  }, 
+  },
   postid: {
     type: String,
     require: [true], // get this from db
-  }, 
+  },
   reply: {
     type: String,
-    require: [true, 'Please add a reply'], 
+    require: [true, "Please add a reply"],
   },
   replyCount: {
     type: Number,
@@ -24,4 +25,4 @@ const communitySchema = Schema({
   },
 });
 
-module.exports = mongoose.model('CommunityReply', communitySchema);
+module.exports = mongoose.model("CommunityReply", communitySchema);
