@@ -1,7 +1,7 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const connectDB = require("./config/connectDB");
-const cors = require("cors");
+const cors = require("cors")({origin: true});
 const fileUpload = require("express-fileupload");
 // const dotenv = require("dotenv").config();
 
@@ -21,7 +21,7 @@ const adminRoute = require("./routes/adminRoutes");
 connectDB(); // Datebase Connected log should show in console
 
 const app = express();// create application to set up entire server
-app.use(cors());
+app.use(cors);
 app.use(fileUpload()); // Set up fileUpload
 app.use(express.json());//* ***important for post
 // allow u pass json information from the body by a formed post
@@ -48,7 +48,7 @@ app.use("/api/messages", messageRoute);
 app.use("/api/rentals", rentalRoute);
 app.use("api/admin", adminRoute);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.MERNMANIACS_PORT || 5555;
 app.listen(PORT, () => {
   console.log(`The server is running on Port ${PORT}`);
 });
